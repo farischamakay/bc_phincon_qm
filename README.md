@@ -1,6 +1,6 @@
 # 🚀 Progress Belajar React Quick Mastering
 
-Ini adalah repositori untuk mendokumentasikan progres belajar saya dalam dunia web development, mulai dari dasar hingga ke tahap yang lebih lanjut.
+Ini adalah repositori untuk mendokumentasikan progres belajar saya dalam belajar cepat fullstack dalam kurang lebih 2 minggu, dimulai dari dasar hingga ke tahap yang lebih lanjut.
 
 ---
 
