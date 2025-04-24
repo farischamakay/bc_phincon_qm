@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <title>Data Pokemon</title>
+  </head>
+  <body class="flex flex-col bg-gray-100">
+    <button
+      id="submit"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mb-4"
+    >
+      Tampilkan List Pokemon
+    </button>
+
+    <div
+      id="pokemon-list"
+      class="grid grid-cols-1 md:grid-cols-3 gap-4 p-4"
+    ></div>
+
+    <script>
+      async function fetchPokemonList() {
+        try {
+          const response = await fetch(
+            "https://pokeapi.co/api/v2/pokemon?limit=10"
+          );
+          const data = await response.json();
+          return data.results;
+        } catch (error) {
+          console.error("Gagal fetch list pokemon:", error);
+        }
+      }
+
+      async function fetchPokemonDetail(url) {
+        try {
+          const response = await fetch(url);
+          return await response.json();
+        } catch (error) {
+          console.error("Gagal fetch detail pokemon:", error);
+        }
+      }
+
+      const button = document.getElementById("submit");
+      const listContainer = document.getElementById("pokemon-list");
+
+      button.addEventListener("click", async () => {
+        listContainer.innerHTML = ""; // Clear previous list
+        const pokemonList = await fetchPokemonList();
+
+        for (const pokemon of pokemonList) {
+          const detail = await fetchPokemonDetail(pokemon.url);
+          const card = document.createElement("div");
+          card.className =
+            "bg-white hover:bg-blue-100 shadow-md p-4 rounded transition-colors duration-200";
+
+          const image = detail.sprites.front_default;
+
+          card.innerHTML = `
+            <img src="${image}" alt="${detail.name}" class="w-24 h-24 mx-auto mb-2" />
+            <p class="text-center font-semibold capitalize">${detail.name}</p>
+            <p class="text-center">Tinggi: ${detail.height}</p>
+            <p class="text-center">Berat: ${detail.weight}</p>
+          `;
+
+          listContainer.appendChild(card);
+        }
+      });
+    </script>
+  </body>
+</html>

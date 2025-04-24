@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      function hitungBilanganGanjil(n) {
+        return Array.from({ length: n }, (_, i) => i + 1).filter(
+          (num) => num % 2 !== 0
+        ).length;
+        // Tulis kode di sini
+      }
+      console.log(hitungBilanganGanjil(10)); // 5
+      console.log(hitungBilanganGanjil(20)); // 10
+
+      // Ekspektasi hasil:
+      // hitungBilanganGanjil(10) => 5
+      // hitungBilanganGanjil(20) => 10
+
+      function cekTahunKabisat(tahun) {
+        return tahun % 4 == 0 && (tahun % 100 != 0 || tahun % 400 == 0)
+          ? true
+          : false;
+      }
+      console.log(cekTahunKabisat(2020));
+
+      function hitungFaktorial(n) {
+        return n <= 1 ? 1 : n * hitungFaktorial(n - 1);
+      }
+      console.log(hitungFaktorial(5)); // Output: 120
+
+      function cariBilanganPrima(n) {
+        const hasil = [];
+
+        for (let i = 2; i <= n; i++) {
+          let prima = true;
+
+          for (let j = 2; j <= Math.sqrt(i); j++) {
+            if (i % j === 0) {
+              prima = false;
+              break;
+            }
+          }
+
+          if (prima) {
+            hasil.push(i);
+          }
+        }
+
+        return hasil;
+      }
+      console.log(cariBilanganPrima(7)); // Output: true
+    </script>
+  </body>
+</html>
