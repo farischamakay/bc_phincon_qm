@@ -23,7 +23,15 @@ class ProductController extends AbstractModel {
   async getById(req: Request, res: Response): Promise<void> {
     try {
       const product = await db.Product.findByPk(req.params.id, {
-        attributes: ["id", "name"],
+        attributes: [
+          "id",
+          "name",
+          "price",
+          "category",
+          "stock",
+          "createdAt",
+          "updatedAt",
+        ],
       });
       res.json({
         status: "success",

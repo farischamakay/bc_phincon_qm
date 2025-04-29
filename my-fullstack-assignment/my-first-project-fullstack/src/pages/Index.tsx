@@ -52,6 +52,7 @@ const Index = () => {
     setError(null);
     try {
       const product = await getProduct(id);
+      console.log("Product details fetched:", product);
       setSelectedProduct(product);
       setViewState("detail");
     } catch (error) {

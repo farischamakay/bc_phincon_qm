@@ -16,9 +16,8 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
 }) => {
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString();
-  };
+  const formatDateTime = (isoString: string): string =>
+    isoString.replace("T", " ").slice(0, 19);
 
   return (
     <div className="space-y-6">
@@ -48,7 +47,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Price:</span>
                   <span className="text-lg font-medium">
-                    ${product.price.toFixed(2)}
+                    Rp{product?.price ?? "0.00"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
@@ -71,11 +70,11 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Created:</span>
-                  <span>{product.createdAt}</span>
+                  <span>{formatDateTime(product.createdAt)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Last Updated:</span>
-                  <span>{product.updatedAt}</span>
+                  <span>{formatDateTime(product.updatedAt)}</span>
                 </div>
               </div>
             </div>

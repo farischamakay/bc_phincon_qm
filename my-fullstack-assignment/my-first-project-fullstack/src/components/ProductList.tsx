@@ -159,7 +159,7 @@ const ProductList: React.FC<ProductListProps> = ({
               <td className="cursor-pointer" onClick={() => onView(product.id)}>
                 {product.name}
               </td>
-              <td>${product.price.toFixed(2)}</td>
+              <td>Rp{product.price}</td>
               <td>{product.category}</td>
               <td>
                 <span
