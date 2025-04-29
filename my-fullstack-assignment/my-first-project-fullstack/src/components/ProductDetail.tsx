@@ -71,19 +71,14 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Created:</span>
-                  <span>{formatDate(product.createdAt)}</span>
+                  <span>{product.createdAt}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Last Updated:</span>
-                  <span>{formatDate(product.updatedAt)}</span>
+                  <span>{product.updatedAt}</span>
                 </div>
               </div>
             </div>
-          </div>
-
-          <div className="mt-6">
-            <h2 className="mb-2">Description</h2>
-            <p className="text-muted">{product.description}</p>
           </div>
         </div>
       </div>

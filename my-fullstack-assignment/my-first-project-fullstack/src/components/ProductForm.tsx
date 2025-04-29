@@ -27,7 +27,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
   const [formData, setFormData] = useState<ProductFormData>({
     name: initialData?.name || "",
-    description: initialData?.description || "",
     price: initialData?.price || 0,
     category: initialData?.category || "",
     stock: initialData?.stock || 0,
@@ -40,10 +39,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
 
     if (!formData.name || formData.name.length < 3) {
       newErrors.name = "Name must be at least 3 characters long";
-    }
-
-    if (!formData.description || formData.description.length < 10) {
-      newErrors.description = "Description must be at least 10 characters long";
     }
 
     if (formData.price <= 0) {
@@ -79,7 +74,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
     if (validate()) {
       onSubmit({
         name: formData.name,
-        description: formData.description,
         price: formData.price,
         category: formData.category,
         stock: formData.stock,
@@ -114,21 +108,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
               />
               {errors.name && (
                 <div className="error-message">{errors.name}</div>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="description">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                placeholder="Detailed product description"
-                value={formData.description}
-                onChange={handleChange}
-                rows={4}
-              />
-              {errors.description && (
-                <div className="error-message">{errors.description}</div>
               )}
             </div>
 
@@ -180,23 +159,6 @@ const ProductForm: React.FC<ProductFormProps> = ({
               />
               {errors.category && (
                 <div className="error-message">{errors.category}</div>
-              )}
-            </div>
-
-            <div className="form-group">
-              <label htmlFor="imageUrl">Image URL (Optional)</label>
-              <input
-                id="imageUrl"
-                name="imageUrl"
-                type="text"
-                placeholder="https://example.com/image.jpg"
-                onChange={handleChange}
-              />
-              <div className="text-sm text-muted mt-1">
-                Enter a valid URL to an image of the product
-              </div>
-              {errors.imageUrl && (
-                <div className="error-message">{errors.imageUrl}</div>
               )}
             </div>
           </div>
