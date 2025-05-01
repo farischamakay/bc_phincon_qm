@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Product } from "../services/product";
+import { useAppDispatch, useAppSelector } from "../store/hooks";
+import { setSortConfig } from "../store/slices/product.slice";
 
 interface ProductListProps {
   products: Product[];
@@ -16,35 +18,20 @@ const ProductList: React.FC<ProductListProps> = ({
   onDelete,
   onView,
 }) => {
-  const [sortConfig, setSortConfig] = useState<{
-    key: keyof Product;
-    direction: "ascending" | "descending";
-  } | null>(null);
+  const dispatch = useAppDispatch();
+  const { sortConfig } = useAppSelector((state) => state.products);
   const [showConfirm, setShowConfirm] = useState<string | null>(null);
 
-  const requestSort = (key: keyof Product) => {
+  const handleSort = (key: keyof Product) => {
     let direction: "ascending" | "descending" = "ascending";
-    if (sortConfig?.key === key && sortConfig.direction === "ascending") {
+    if (sortConfig.key === key && sortConfig.direction === "ascending") {
       direction = "descending";
     }
-    setSortConfig({ key, direction });
-  };
-
-  const getSortedProducts = () => {
-    if (!sortConfig?.key || !sortConfig?.direction) return products;
-
-    const { key, direction } = sortConfig;
-    const isAscending = direction === "ascending" ? 1 : -1;
-
-    return [...products].sort((a, b) => {
-      const aVal = a[key] ?? "";
-      const bVal = b[key] ?? "";
-      return aVal > bVal ? isAscending : aVal < bVal ? -isAscending : 0;
-    });
+    dispatch(setSortConfig({ key, direction }));
   };
 
   const getColumnSortIndicator = (key: keyof Product) => {
-    if (sortConfig?.key !== key) {
+    if (sortConfig.key !== key) {
       return null;
     }
     return sortConfig.direction === "ascending" ? "↑" : "↓";
@@ -129,24 +116,24 @@ const ProductList: React.FC<ProductListProps> = ({
       <table>
         <thead>
           <tr>
-            <th className="cursor-pointer" onClick={() => requestSort("name")}>
+            <th className="cursor-pointer" onClick={() => handleSort("name")}>
               Name {getColumnSortIndicator("name")}
             </th>
-            <th className="cursor-pointer" onClick={() => requestSort("price")}>
+            <th className="cursor-pointer" onClick={() => handleSort("price")}>
               Price {getColumnSortIndicator("price")}
             </th>
             <th
               className="cursor-pointer"
-              onClick={() => requestSort("category")}
+              onClick={() => handleSort("category")}
             >
               Category {getColumnSortIndicator("category")}
             </th>
-            <th className="cursor-pointer" onClick={() => requestSort("stock")}>
+            <th className="cursor-pointer" onClick={() => handleSort("stock")}>
               Stock {getColumnSortIndicator("stock")}
             </th>
             <th
               className="cursor-pointer"
-              onClick={() => requestSort("updatedAt")}
+              onClick={() => handleSort("updatedAt")}
             >
               Last Updated {getColumnSortIndicator("updatedAt")}
             </th>
@@ -154,92 +141,96 @@ const ProductList: React.FC<ProductListProps> = ({
           </tr>
         </thead>
         <tbody>
-          {getSortedProducts().map((product) => (
-            <tr key={product.id}>
-              <td className="cursor-pointer" onClick={() => onView(product.id)}>
-                {product.name}
-              </td>
-              <td>Rp{product.price}</td>
-              <td>{product.category}</td>
-              <td>
-                <span
-                  className={`badge ${
-                    product.stock > 20
-                      ? "badge-green"
-                      : product.stock > 5
-                      ? "badge-yellow"
-                      : "badge-red"
-                  }`}
-                >
-                  {product.stock}
-                </span>
-              </td>
-              <td>{formatDate(product.updatedAt)}</td>
-              <td>
-                <div className="flex space-x-2">
-                  <button
-                    className="btn btn-outline btn-sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onEdit(product);
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className="btn btn-danger btn-sm"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteClick(product.id);
-                    }}
-                  >
-                    Delete
-                  </button>
-
-                  {/* Confirmation Dialog */}
-                  {showConfirm === product.id && (
-                    <div
-                      className="alert-dialog-backdrop"
-                      onClick={() => setShowConfirm(null)}
-                    >
-                      <div
-                        className="alert-dialog"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="alert-dialog-title">
-                          Confirm deletion
-                        </div>
-                        <div className="alert-dialog-description">
-                          Are you sure you want to delete "{product.name}"? This
-                          action cannot be undone.
-                        </div>
-                        <div className="alert-dialog-footer">
-                          <button
-                            className="btn btn-outline"
-                            onClick={() => setShowConfirm(null)}
-                          >
-                            Cancel
-                          </button>
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => handleConfirmDelete(product.id)}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </td>
-            </tr>
-          ))}
-          {products.length === 0 && (
+          {products.length === 0 ? (
             <tr>
               <td colSpan={6} className="text-center p-6 text-muted">
                 No products found. Add a new product to get started.
               </td>
             </tr>
+          ) : (
+            products.map((product) => (
+              <tr key={product.id}>
+                <td
+                  className="cursor-pointer"
+                  onClick={() => onView(product.id)}
+                >
+                  {product.name}
+                </td>
+                <td>${product.price.toFixed(2)}</td>
+                <td>{product.category}</td>
+                <td>
+                  <span
+                    className={`badge ${
+                      product.stock > 20
+                        ? "badge-green"
+                        : product.stock > 5
+                        ? "badge-yellow"
+                        : "badge-red"
+                    }`}
+                  >
+                    {product.stock}
+                  </span>
+                </td>
+                <td>{formatDate(product.updatedAt)}</td>
+                <td>
+                  <div className="flex space-x-2">
+                    <button
+                      className="btn btn-outline btn-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(product);
+                      }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className="btn btn-danger btn-sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDeleteClick(product.id);
+                      }}
+                    >
+                      Delete
+                    </button>
+
+                    {/* Confirmation Dialog */}
+                    {showConfirm === product.id && (
+                      <div
+                        className="alert-dialog-backdrop"
+                        onClick={() => setShowConfirm(null)}
+                      >
+                        <div
+                          className="alert-dialog"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="alert-dialog-title">
+                            Confirm deletion
+                          </div>
+                          <div className="alert-dialog-description">
+                            Are you sure you want to delete "{product.name}"?
+                            This action cannot be undone.
+                          </div>
+                          <div className="alert-dialog-footer">
+                            <button
+                              className="btn btn-outline"
+                              onClick={() => setShowConfirm(null)}
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              className="btn btn-danger"
+                              onClick={() => handleConfirmDelete(product.id)}
+                            >
+                              Delete
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))
           )}
         </tbody>
       </table>

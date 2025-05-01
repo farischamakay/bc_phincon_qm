@@ -2,12 +2,21 @@ import { Request, Response } from "express";
 import AbstractModel from "../abstracts/model.abstract.js";
 import db from "../models/index.js";
 import { v4 as uuidv4 } from "uuid";
+import { Op } from "sequelize";
 
 class ProductController extends AbstractModel {
   async getAll(req: Request, res: Response): Promise<void> {
     console.log(db);
     try {
-      const products = await db.Product.findAll();
+      const products = await db.Product.findAll({
+        include: [
+          {
+            model: db.Category,
+            as: "category",
+            attributes: ["categoryId", "title"],
+          },
+        ],
+      });
       res.json({
         status: "success",
         message: "Products fetched successfully",
@@ -99,6 +108,37 @@ class ProductController extends AbstractModel {
       });
     }
   }
-}
+  async searchByName(req: Request, res: Response): Promise<void> {
+    try {
+      const { name } = req.query;
 
+      if (!name || typeof name !== "string") {
+        res.status(400).json({
+          status: "error",
+          message: "Query parameter 'name' is required and must be a string",
+        });
+        return;
+      }
+
+      const products = await db.Product.findAll({
+        where: {
+          name: {
+            [Op.like]: `%${name}%`,
+          },
+        },
+      });
+
+      res.json({
+        status: "success",
+        message: "Product fetched successfully",
+        data: products,
+      });
+    } catch (error: any) {
+      res.status(500).json({
+        status: "error",
+        message: error.message,
+      });
+    }
+  }
+}
 export default new ProductController();

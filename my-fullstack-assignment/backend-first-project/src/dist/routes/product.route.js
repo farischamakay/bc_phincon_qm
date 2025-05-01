@@ -6,4 +6,5 @@ router.get("/:id", ProductController.getById);
 router.post("/", ProductController.create);
 router.put("/:id", ProductController.update);
 router.delete("/:id", ProductController.delete);
+router.get("/search", ProductController.searchByName);
 export default router;

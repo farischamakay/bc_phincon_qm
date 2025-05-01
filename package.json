@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@radix-ui/react-select": "^2.2.2",
     "@reduxjs/toolkit": "^2.7.0",
     "react-redux": "^9.2.0"
   }
