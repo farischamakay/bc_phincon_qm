@@ -31,6 +31,19 @@ Kamu bisa cek implementasinya di:
 
 ---
 
+## 📅 Day 3 - Redux and ORM
+Hari ketiga kami full belajar mengenai:
+- State Management
+- Redux
+- Backend menggunakan Express, ORM dan config database.
+
+## 📅 Day 4 - Mengerjakan Tugas Project Fullstack
+
+
+https://github.com/user-attachments/assets/da7f1ac7-f820-4afe-b536-ad188e3cde63
+
+
+
 ## ⏭️ Akan Datang
 Saya akan terus menambahkan hari-hari berikutnya seiring progres belajar saya.
 
