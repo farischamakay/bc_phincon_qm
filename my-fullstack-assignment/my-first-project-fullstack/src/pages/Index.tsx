@@ -68,7 +68,7 @@ const Index = () => {
   const handleUpdateProduct = async (data: ProductFormData) => {
     if (!selectedProduct) return;
 
-    dispatch(editProduct({ id: selectedProduct.id, data }))
+    dispatch(editProduct({ id: selectedProduct.productId, data }))
       .unwrap()
       .then(() => {
         setViewState("detail");
@@ -81,7 +81,7 @@ const Index = () => {
     dispatch(removeProduct(id))
       .unwrap()
       .then(() => {
-        if (selectedProduct?.id === id) {
+        if (selectedProduct?.productId === id) {
           setViewState("list");
         }
         toast.success("Product deleted successfully!");
@@ -120,7 +120,7 @@ const Index = () => {
               products={paginatedProducts}
               isLoading={isLoading}
               onEdit={(product) => {
-                dispatch(fetchProductDetail(product.id));
+                dispatch(fetchProductDetail(product.productId));
                 setViewState("edit");
               }}
               onDelete={handleDeleteProduct}
@@ -132,7 +132,7 @@ const Index = () => {
           </>
         );
       case "detail":
-        return loadingProductId === selectedProduct?.id ? (
+        return loadingProductId === selectedProduct?.productId ? (
           <ProductDetailSkeleton />
         ) : selectedProduct ? (
           <ProductDetail

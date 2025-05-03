@@ -17,15 +17,15 @@ const ProductSearch: React.FC = () => {
   const dispatch = useAppDispatch();
   const { products, filters } = useAppSelector((state) => state.products);
   const [searchValue, setSearchValue] = useState(filters.search);
-  const [categories, setCategories] = useState<string[]>([]);
+  const [categories] = useState<string[]>([]);
 
   // Extract unique categories from products
   useEffect(() => {
     if (products.length > 0) {
-      const uniqueCategories = Array.from(
-        new Set(products.map((p) => p.category))
-      );
-      setCategories(uniqueCategories.sort());
+      // const uniqueCategories = Array.from(
+      //   new Set(products.map((p) => p.category?.title))
+      // );
+      // setCategories(uniqueCategories.ascending());
     }
   }, [products]);
 

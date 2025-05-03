@@ -53,7 +53,7 @@ const initialState: ProductsState = {
   },
   pagination: {
     page: 1,
-    limit: 5,
+    limit: 4,
     total: 0,
   },
   sortConfig: {
@@ -72,14 +72,14 @@ const applyFiltersAndSort = (state: ProductsState) => {
     result = result.filter(
       (product) =>
         product.name.toLowerCase().includes(searchTerm) ||
-        product.category.toLowerCase().includes(searchTerm)
+        product.categoryId.toLowerCase().includes(searchTerm)
     );
   }
 
   // Apply category filter
   if (state.filters.category && state.filters.category !== "all") {
     result = result.filter(
-      (product) => product.category === state.filters.category
+      (product) => product.categoryId === state.filters.category
     );
   }
 
@@ -87,11 +87,13 @@ const applyFiltersAndSort = (state: ProductsState) => {
   if (state.sortConfig.key) {
     result.sort((a, b) => {
       const key = state.sortConfig.key as keyof Product;
+      const aValue = a[key] ?? 0;
+      const bValue = b[key] ?? 0;
 
-      if (a[key] < b[key]) {
+      if (aValue < bValue) {
         return state.sortConfig.direction === "ascending" ? -1 : 1;
       }
-      if (a[key] > b[key]) {
+      if (aValue > bValue) {
         return state.sortConfig.direction === "ascending" ? 1 : -1;
       }
       return 0;
@@ -140,6 +142,7 @@ export const addProduct = createAsyncThunk(
   async (data: ProductFormData, { rejectWithValue }) => {
     try {
       const newProduct = await createProduct(data);
+      console.log("New product created:", newProduct);
       return newProduct;
     } catch (error) {
       let errorMessage = "Failed to create product.";
@@ -283,7 +286,7 @@ const productsSlice = createSlice({
           state.isSubmitting = false;
           state.selectedProduct = action.payload;
           state.products = state.products.map((p) =>
-            p.id === action.payload.id ? action.payload : p
+            p.productId === action.payload.productId ? action.payload : p
           );
         }
       )
@@ -300,10 +303,10 @@ const productsSlice = createSlice({
         removeProduct.fulfilled,
         (state, action: PayloadAction<string>) => {
           state.products = state.products.filter(
-            (p) => p.id !== action.payload
+            (p) => p.productId !== action.payload
           );
           // If currently selected product is deleted, clear it
-          if (state.selectedProduct?.id === action.payload) {
+          if (state.selectedProduct?.productId === action.payload) {
             state.selectedProduct = null;
           }
         }

@@ -52,7 +52,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Category:</span>
-                  <span>{product.category}</span>
+                  <span>{product.category?.title}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="font-medium">Stock:</span>
@@ -101,7 +101,7 @@ const ProductDetail: React.FC<ProductDetailProps> = ({
               <button
                 className="btn btn-danger"
                 onClick={() => {
-                  onDelete(product.id);
+                  onDelete(product.productId);
                   setShowConfirm(false);
                 }}
               >

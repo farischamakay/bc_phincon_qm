@@ -28,7 +28,8 @@ const ProductForm: React.FC<ProductFormProps> = ({
   const [formData, setFormData] = useState<ProductFormData>({
     name: initialData?.name || "",
     price: initialData?.price || 0,
-    category: initialData?.category || "",
+    categoryId: initialData?.categoryId || "",
+    category: initialData?.category,
     stock: initialData?.stock || 0,
   });
 
@@ -75,6 +76,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
       onSubmit({
         name: formData.name,
         price: formData.price,
+        categoryId: formData.categoryId,
         category: formData.category,
         stock: formData.stock,
       });
@@ -154,7 +156,7 @@ const ProductForm: React.FC<ProductFormProps> = ({
                 name="category"
                 type="text"
                 placeholder="Product category"
-                value={formData.category}
+                value={formData.category?.title || ""}
                 onChange={handleChange}
               />
               {errors.category && (

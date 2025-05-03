@@ -1,13 +1,18 @@
 const API_URL = "http://localhost:3000/api";
 
 // Type definitions
+export interface Category {
+  categoryId: string;
+  title: string;
+}
 export interface Product {
-  id: string;
+  productId: string;
   name: string;
   price: number;
-  category: string;
+  categoryId: string;
   stock: number;
   imageUrl?: string;
+  category?: Category;
   data?: string | null;
   createdAt: string;
   updatedAt: string;
@@ -16,7 +21,8 @@ export interface Product {
 export interface ProductFormData {
   name: string;
   price: number;
-  category: string;
+  category?: Category;
+  categoryId: string;
   stock: number;
   imageUrl?: string;
   data?: string | null;

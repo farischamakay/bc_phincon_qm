@@ -29,28 +29,55 @@ class ProductController extends AbstractModel {
         }
     }
     async getById(req, res) {
+        console.log("Raw productId from params:", req.params.productId);
+        // Clean the ID (remove leading colon if present)
+        const productId = req.params.productId.replace(/^:/, "");
+        console.log("Cleaned productId:", productId);
         try {
-            const product = await db.Product.findByPk(req.params.id, {
+            // 1. First verify the ID is a valid UUID
+            if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(productId)) {
+                res.status(400).json({
+                    status: "error",
+                    message: "Invalid product ID format",
+                });
+            }
+            // 2. Query with the CLEANED ID
+            const product = await db.Product.findByPk(productId, {
                 attributes: [
-                    "id",
+                    "productId",
                     "name",
                     "price",
-                    "category",
+                    "categoryId",
                     "stock",
+                    "data",
                     "createdAt",
                     "updatedAt",
                 ],
+                include: [
+                    {
+                        model: db.Category,
+                        as: "category",
+                        attributes: ["categoryId", "title"],
+                    },
+                ],
             });
+            // 3. Handle null result
+            if (!product) {
+                res.status(404).json({
+                    status: "error",
+                    message: `Product with ID ${productId} not found`,
+                });
+            }
             res.json({
                 status: "success",
-                message: "Product fetched successfully",
                 product,
             });
         }
         catch (error) {
-            res.json({
+            console.error("Error fetching product:", error);
+            res.status(500).json({
                 status: "error",
-                message: error.message,
+                message: "Internal server error",
             });
         }
     }

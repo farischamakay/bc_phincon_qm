@@ -149,15 +149,15 @@ const ProductList: React.FC<ProductListProps> = ({
             </tr>
           ) : (
             products.map((product) => (
-              <tr key={product.id}>
+              <tr key={product.productId}>
                 <td
                   className="cursor-pointer"
-                  onClick={() => onView(product.id)}
+                  onClick={() => onView(product.productId)}
                 >
                   {product.name}
                 </td>
                 <td>${product.price.toFixed(2)}</td>
-                <td>{product.category}</td>
+                <td>{product.category?.title}</td>
                 <td>
                   <span
                     className={`badge ${
@@ -187,14 +187,14 @@ const ProductList: React.FC<ProductListProps> = ({
                       className="btn btn-danger btn-sm"
                       onClick={(e) => {
                         e.stopPropagation();
-                        handleDeleteClick(product.id);
+                        handleDeleteClick(product.productId);
                       }}
                     >
                       Delete
                     </button>
 
                     {/* Confirmation Dialog */}
-                    {showConfirm === product.id && (
+                    {showConfirm === product.productId && (
                       <div
                         className="alert-dialog-backdrop"
                         onClick={() => setShowConfirm(null)}
@@ -219,7 +219,9 @@ const ProductList: React.FC<ProductListProps> = ({
                             </button>
                             <button
                               className="btn btn-danger"
-                              onClick={() => handleConfirmDelete(product.id)}
+                              onClick={() =>
+                                handleConfirmDelete(product.productId)
+                              }
                             >
                               Delete
                             </button>
